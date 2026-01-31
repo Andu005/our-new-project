@@ -12,10 +12,11 @@ char processLetter(char letter, bool reverse) {
     if (!isalpha(letter)) return letter;
     letter = toupper(letter);
 
+    //review
     if (!reverse) {
         int pos = (letter - 'A' + rotor1.position) % 26;
         letter = rotor1.wiring[pos];
-
+        
         pos = (letter - 'A' + rotor2.position) % 26;
         letter = rotor2.wiring[pos];
 
@@ -39,6 +40,7 @@ char processLetter(char letter, bool reverse) {
     return letter;
 }
 
+//review
 // Obtenim el missatge de l'usuari
 std::string getMessageFromUser() {
     std::cout << "Introduce el mensaje: ";
@@ -47,6 +49,7 @@ std::string getMessageFromUser() {
     return message;
 }
 
+//review
 // Xifrat/desxifrat d'arxius
 void encryptDecryptFile(bool encrypt) {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -93,7 +96,7 @@ void encryptDecryptFile(bool encrypt) {
         << "Resultado en " << outputFilename << std::endl;
 }
 
-// Editar/modificar la configuració dels rotors
+// Editar/modificar la configuraciÃ³ dels rotors
 void editRotor() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -107,13 +110,13 @@ void editRotor() {
     Rotor* rotor = (choice == 1) ? &rotor1 : (choice == 2) ? &rotor2 : &rotor3;
     std::string filename = "Rotor" + std::to_string(choice) + ".txt";
 
-    std::cout << "Nuevo cableado (26 letras únicas): ";
+    std::cout << "Nuevo cableado (26 letras Ãºnicas): ";
     std::string newWiring;
     getline(std::cin, newWiring);
 
     if (!validateWiring(newWiring)) return;
 
-    std::cout << "Posición del notch (A-Z): ";
+    std::cout << "PosiciÃ³n del notch (A-Z): ";
     char newNotch;
     std::cin >> newNotch;
     newNotch = toupper(newNotch);
@@ -151,7 +154,7 @@ void showMenu() {
         case 2: encryptDecryptFile(false); break;
         case 3: editRotor(); break;
         case 4: std::cout << "Saliendo...\n"; break;
-        default: std::cout << "Opción no válida\n";
+        default: std::cout << "OpciÃ³n no vÃ¡lida\n";
         }
     } while (choice != 4);
 }

@@ -66,15 +66,12 @@ void encryptDecryptFile(bool encrypt) {
         rotor3.position = toupper(c3) - 'A';
     }
 //review - 77
-    std::string message = encrypt ? getMessageFromUser() : [&]() {
-        std::ifstream inputFile(ENCRYPTED_FILE);
-        std::string content;
-        if (inputFile) {
-            content.assign((std::istreambuf_iterator<char>(inputFile)),
-                std::istreambuf_iterator<char>());
-        }
-        return content;
-        }();
+    std::string message;
+    if (encrypt) {
+        message = getMessageFromUser();
+    } else {
+        message = readFromFile(ENCRYPTED_FILE); // Función separada
+    }
 
     std::string cleaned = cleanMessage(message);
     std::string result;
@@ -107,7 +104,16 @@ void editRotor() {
 
     if (choice < 1 || choice > 3) return;
     //review 110
-    Rotor* rotor = (choice == 1) ? &rotor1 : (choice == 2) ? &rotor2 : &rotor3;
+    Rotor* rotor;
+    if (choice == 1) {
+        rotor = &rotor1;
+    }
+    else if (choice == 2) {
+        rotor = &rotor2;
+    }
+    else {
+        rotor = &rotor3;
+    }
     std::string filename = "Rotor" + std::to_string(choice) + ".txt";
 
     std::cout << "Nuevo cableado (26 letras únicas): ";

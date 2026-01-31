@@ -7,7 +7,7 @@
 #include <cctype>
 #include <limits>
 
-// Procesem una lletra
+// review - 
 char processLetter(char letter, bool reverse) {
     if (!isalpha(letter)) return letter;
     letter = toupper(letter);
@@ -65,7 +65,7 @@ void encryptDecryptFile(bool encrypt) {
         rotor2.position = toupper(c2) - 'A';
         rotor3.position = toupper(c3) - 'A';
     }
-
+//review - 77
     std::string message = encrypt ? getMessageFromUser() : [&]() {
         std::ifstream inputFile(ENCRYPTED_FILE);
         std::string content;
@@ -106,7 +106,7 @@ void editRotor() {
     std::cin.ignore();
 
     if (choice < 1 || choice > 3) return;
-
+    //review 110
     Rotor* rotor = (choice == 1) ? &rotor1 : (choice == 2) ? &rotor2 : &rotor3;
     std::string filename = "Rotor" + std::to_string(choice) + ".txt";
 

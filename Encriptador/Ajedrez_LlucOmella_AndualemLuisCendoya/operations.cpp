@@ -6,41 +6,52 @@
 #include <algorithm>
 #include <cctype>
 #include <limits>
+#define dif 32 //indica la difenrencia entre minusculas i mayusculas a la taula ASCII
 
-// review - 
+// Procesem una lletra
 char processLetter(char letter, bool reverse) {
-    if (!isalpha(letter)) return letter;
     letter = toupper(letter);
+    if (letter >= 'a' && letter <= 'z') {//si es minuscula passa a majuscula restant 32 a la taula ascii
+        letter = letter - dif;
+    }
+    if (letter < 'A' || (letter > 'Z' && letter < 'a') || letter > 'z')//si es un char difenrent
+    {
+        return letter;
+    }
+    //si es majuscula no fa res, ja esta be
 
-    //review
     if (!reverse) {
-        int pos = (letter - 'A' + rotor1.position) % 26;
-        letter = rotor1.wiring[pos];
+        int letterN = letter - 'A';//passem la lletra a num, seguint la taula ASCII, restant la diferencia fins 'A'
         
-        pos = (letter - 'A' + rotor2.position) % 26;
+        //A=1, B=2, C=3...
+
+        int pos = (letterN + rotor1.position) % 26;//li sumem els moviments per cada rotor
+        letter = rotor1.wiring[pos];
+
+        letterN = letter - 'A';//fem la transformacio a majuscula per cada rotor
+
+        pos = (letterN + rotor2.position) % 26;
         letter = rotor2.wiring[pos];
 
-        pos = (letter - 'A' + rotor3.position) % 26;
+        letterN = letter - 'A';//A=1...
+
+        pos = (letterN + rotor3.position) % 26;
         letter = rotor3.wiring[pos];
     }
     else {
-        int pos = rotor3.wiring.find(letter);
-        pos = (pos - rotor3.position + 26) % 26;
+        int pos = rotor3.wiring.find(letter); //busca a lletra (letter) a rotorX.wiring
+        pos = (pos - rotor3.position + 26) % 26;//desfem els moviments dels rotors, sumem pos(moviments) a 'A'
         letter = 'A' + pos;
-
         pos = rotor2.wiring.find(letter);
         pos = (pos - rotor2.position + 26) % 26;
         letter = 'A' + pos;
-
         pos = rotor1.wiring.find(letter);
         pos = (pos - rotor1.position + 26) % 26;
         letter = 'A' + pos;
     }
-
     return letter;
 }
 
-//review
 // Obtenim el missatge de l'usuari
 std::string getMessageFromUser() {
     std::cout << "Introduce el mensaje: ";
@@ -49,15 +60,12 @@ std::string getMessageFromUser() {
     return message;
 }
 
-//review
 // Xifrat/desxifrat d'arxius
 void encryptDecryptFile(bool encrypt) {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
     std::cout << "Posiciones iniciales (ej. A B C): ";
     std::string windowSettings;
     getline(std::cin, windowSettings);
-
     std::istringstream iss(windowSettings);
     char c1, c2, c3;
     if (iss >> c1 >> c2 >> c3) {
@@ -65,30 +73,29 @@ void encryptDecryptFile(bool encrypt) {
         rotor2.position = toupper(c2) - 'A';
         rotor3.position = toupper(c3) - 'A';
     }
-//review - 77
-    std::string message;
-    if (encrypt) {
-        message = getMessageFromUser();
-    } else {
-        message = readFromFile(ENCRYPTED_FILE); // Función separada
-    }
+
+    std::string message = encrypt ? getMessageFromUser() : [&]() {
+        std::ifstream inputFile(ENCRYPTED_FILE);
+        std::string content;
+        if (inputFile) {
+            content.assign((std::istreambuf_iterator<char>(inputFile)),
+                std::istreambuf_iterator<char>());
+        }
+        return content;
+        }();
 
     std::string cleaned = cleanMessage(message);
     std::string result;
-
     for (char c : cleaned) {
         result += processLetter(c, !encrypt);
         rotateRotors();
     }
-
     groupText(result);
-
     std::string outputFilename = encrypt ? ENCRYPTED_FILE : DECRYPTED_FILE;
     std::ofstream outputFile(outputFilename);
     if (outputFile) {
         outputFile << result;
     }
-
     std::cout << (encrypt ? "Cifrado" : "Descifrado") << " completado. "
         << "Resultado en " << outputFilename << std::endl;
 }
@@ -103,17 +110,8 @@ void editRotor() {
     std::cin.ignore();
 
     if (choice < 1 || choice > 3) return;
-    //review 110
-    Rotor* rotor;
-    if (choice == 1) {
-        rotor = &rotor1;
-    }
-    else if (choice == 2) {
-        rotor = &rotor2;
-    }
-    else {
-        rotor = &rotor3;
-    }
+
+    Rotor* rotor = (choice == 1) ? &rotor1 : (choice == 2) ? &rotor2 : &rotor3;
     std::string filename = "Rotor" + std::to_string(choice) + ".txt";
 
     std::cout << "Nuevo cableado (26 letras únicas): ";
@@ -127,16 +125,13 @@ void editRotor() {
     std::cin >> newNotch;
     newNotch = toupper(newNotch);
     std::cin.ignore();
-
     rotor->wiring = newWiring;
     rotor->notch = newNotch;
-
     std::ofstream file(filename);
     if (file) {
         file << rotor->wiring << '\n' << rotor->notch;
     }
 }
-
 //impresio del menu per escollir
 void showMenu() {
     int choice;
@@ -147,14 +142,12 @@ void showMenu() {
             << "3. Editar rotors\n"
             << "4. Salir\n"
             << "Selecciona: ";
-
         if (!(std::cin >> choice)) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
         }
         std::cin.ignore();
-
         switch (choice) {
         case 1: encryptDecryptFile(true); break;
         case 2: encryptDecryptFile(false); break;
@@ -164,7 +157,6 @@ void showMenu() {
         }
     } while (choice != 4);
 }
-
 std::string cleanMessage(const std::string& message) {
     std::string cleaned;
     for (char c : message) {
@@ -174,7 +166,6 @@ std::string cleanMessage(const std::string& message) {
     }
     return cleaned;
 }
-
 //funcio per separar de 5 en 5 (lletres)
 void groupText(std::string& text) {
     std::string grouped;

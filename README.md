@@ -73,7 +73,7 @@ El programa anirà saltant lletres fins a trobar la indicada. Quan els tres roto
 Per desxifrar el missatge, cal utilitzar el mateix **notch**. El procés és l’invers: desfà les operacions realitzades durant la xifra. Com que els rotors són els mateixos i tenen la posició inicial coneguda, el missatge es pot recuperar correctament. El resultat es guarda a `Desxifrat.txt`.
 
 <p align="center">
-  <img src="/desencriptarfoto.png" alt="Desxifrant el missatge" width="500"/>
+  <img src="/desxifrarfoto.png" alt="Desxifrant el missatge" width="500"/>
 </p>
 
 [▲ Tornar a l'índex](#índex).
@@ -142,7 +142,7 @@ Es l'arxiu que, tal i com diu el seu nom conté el missatge *xifrat*: es a dir n
 ### Desxifrat.txt
 
 ```
-En aquest arxiu, i per tal de simular la màquina exnigma original, el missatge -ja desencriptat-, es presnta d'una forma concreta:
+En aquest arxiu, i per tal de simular la màquina exnigma original, el missatge -ja desxifrat-, es presnta d'una forma concreta:
 
 - Totes les lletres foren majuscules o minuscules, apsen a ser majuscules.
 

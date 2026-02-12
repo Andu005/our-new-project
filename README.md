@@ -50,7 +50,7 @@ El menú del programa és aquest i ofereix diverses opcions:
 Aquesta opció encripta el missatge que introduïm per terminal. El contingut es xifra utilitzant la lògica dels tres rotors. Cada rotor és un `.txt` amb l’abecedari desordenat. El codi assigna una posició inicial a cada rotor segons el notch.
 
 <p align="center">
-  <img src="/encriptarfoto.png" alt="Xifrant el missatge" width="500"/>
+  <img src="/desxifrarfoto.png" alt="Xifrant el missatge" width="500"/>
 </p>
 
 Per exemple, si la posició inicial dels rotors és `"GAT"`, el programa fa un bucle per trobar la lletra inicial en cada rotor. Suposem que tenim un rotor com aquest:
